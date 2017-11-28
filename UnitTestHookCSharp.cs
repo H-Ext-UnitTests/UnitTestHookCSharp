@@ -515,40 +515,38 @@ namespace UnitTestHookCSharp {
         // Enabled in 0.5.3.4
         [DllExport("EXTOnVehicleRespawnProcess", CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static bool EXTOnVehicleRespawnProcess([In] s_ident obj_id, [In] s_object_ptr cur_object, [In] Addon_API.objManagedPtr managedObj, [In, MarshalAs(UnmanagedType.I1)] bool isManaged) {
+        public static HEXT.VEHICLE_RESPAWN EXTOnVehicleRespawnProcess([In] s_ident obj_id, [In] s_object_ptr cur_object, [In] Addon_API.objManagedPtr managedObj) {
             if (checkHooks.EXTOnVehicleRespawnProcess < MAX_HOOK_COUNTER) {
                 checkHooks.EXTOnVehicleRespawnProcess++;
                 StringBuilder output = new StringBuilder(Addon_API.ICIniFileClass.INIFILEVALUEMAX);
-                object[] vars = new object[5];
+                object[] vars = new object[4];
                 s_object_managed cur_object_managed = new s_object_managed(cur_object);
                 Addon_API.objManaged_managed objManaged_managed = new Addon_API.objManaged_managed(managedObj);
                 vars[0] = cur_object_managed.s_object_n.ModelTag.Tag;
                 vars[1] = objManaged_managed.objManaged_n.world.x;
                 vars[2] = objManaged_managed.objManaged_n.world.y;
                 vars[3] = objManaged_managed.objManaged_n.world.z;
-                vars[4] = isManaged;
-                pIUtil.m_formatVariantW(output, (uint)output.Capacity, "ModelTag: {0:08X}, World X: {1:f}, Y: {2:f}, Z: {3:f}, isManaged: {4:d}", (uint)vars.Length, vars);
+                pIUtil.m_formatVariantW(output, (uint)output.Capacity, "ModelTag: {0:08X}, World X: {1:f}, Y: {2:f}, Z: {3:f}", (uint)vars.Length, vars);
                 pICIniFile.m_value_set(HookNames[21], checkHooks.EXTOnVehicleRespawnProcess.ToString(), output.ToString());
             }
-            return true; //If set to false, it is managed by you. True for default.
+            return HEXT.VEHICLE_RESPAWN.DEFAULT; //Look in VEHICLE_RESPAWN enum for available options to return.
         }
 
         // Enabled in 0.5.3.4
         [DllExport("EXTOnObjectDeleteAttempt", CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static bool EXTOnObjectDeleteAttempt([In] s_ident obj_id, [In] s_object_ptr cur_object, [In] int curTicks, [In, MarshalAs(UnmanagedType.I1)] bool isManaged) {
+        public static HEXT.OBJECT_ATTEMPT EXTOnObjectDeleteAttempt([In] s_ident obj_id, [In] s_object_ptr cur_object, [In] int curTicks) {
             if (checkHooks.EXTOnObjectDeleteAttempt < MAX_HOOK_COUNTER) {
                 checkHooks.EXTOnObjectDeleteAttempt++;
                 StringBuilder output = new StringBuilder(Addon_API.ICIniFileClass.INIFILEVALUEMAX);
-                object[] vars = new object[3];
+                object[] vars = new object[2];
                 s_object_managed cur_object_managed = new s_object_managed(cur_object);
                 vars[0] = cur_object_managed.s_object_n.ModelTag.Tag;
                 vars[1] = curTicks;
-                vars[2] = isManaged;
-                pIUtil.m_formatVariantW(output, (uint)output.Capacity, "ModelTag: {0:08X}, Current Ticks: {1:d}, isManaged: {2:d}", (uint)vars.Length, vars);
+                pIUtil.m_formatVariantW(output, (uint)output.Capacity, "ModelTag: {0:08X}, Current Ticks: {1:d}", (uint)vars.Length, vars);
                 pICIniFile.m_value_set(HookNames[22], checkHooks.EXTOnObjectDeleteAttempt.ToString(), output.ToString());
             }
-            return true; //If set to false, it is managed by you. True for default.
+            return HEXT.OBJECT_ATTEMPT.DEFAULT; //Look in OBJECT_ATTEMPT enum for available options to return.
         }
 
         [DllExport("EXTOnObjectDamageLookupProcess", CallingConvention = CallingConvention.Cdecl)]
@@ -676,21 +674,20 @@ namespace UnitTestHookCSharp {
         // Enabled in 0.5.3.4
         [DllExport("EXTOnObjectCreateAttempt", CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static bool EXTOnObjectCreateAttempt([In] Addon_API.PlayerInfo plOwner, [In] Addon_API.objCreationInfo object_creation, [In, Out] Addon_API.objCreationInfoPtr change_object, [In, MarshalAs(UnmanagedType.I1)] bool isOverride) {
+        public static HEXT.OBJECT_ATTEMPT EXTOnObjectCreateAttempt([In] Addon_API.PlayerInfo plOwner, [In] Addon_API.objCreationInfo object_creation, [In, Out] Addon_API.objCreationInfoPtr change_object) {
             if (checkHooks.EXTOnObjectCreateAttempt < MAX_HOOK_COUNTER) {
                 checkHooks.EXTOnObjectCreateAttempt++;
                 StringBuilder output = new StringBuilder(Addon_API.ICIniFileClass.INIFILEVALUEMAX);
-                object[] vars = new object[6];
+                object[] vars = new object[5];
                 vars[0] = object_creation.map_id.Tag;
                 vars[1] = object_creation.parent_id.Tag;
                 vars[2] = object_creation.pos.x;
                 vars[3] = object_creation.pos.y;
                 vars[4] = object_creation.pos.z;
-                vars[5] = isOverride;
-                pIUtil.m_formatVariantW(output, (uint)output.Capacity, "map_id: {0:08X}, parent_id: {1:08X}, pos.x: {2:f}, pos.y: {3:f}, pos.z: {4:f}, isOverride: {5:d}", (uint)vars.Length, vars);
+                pIUtil.m_formatVariantW(output, (uint)output.Capacity, "map_id: {0:08X}, parent_id: {1:08X}, pos.x: {2:f}, pos.y: {3:f}, pos.z: {4:f}", (uint)vars.Length, vars);
                 pICIniFile.m_value_set(HookNames[31], checkHooks.EXTOnObjectCreateAttempt.ToString(), output.ToString());
             }
-            return false; //Set to true will override. False for default.
+            return HEXT.OBJECT_ATTEMPT.DEFAULT; //Look in OBJECT_ATTEMPT enum for available options to return.
         }
 
         //Featured in 0.5.3.2 and newer
